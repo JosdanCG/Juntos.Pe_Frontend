@@ -5,7 +5,7 @@ export default function AuthLayout() {
     <>
             <div className="bg-slate-800 min-h-screen">
                 <div className="max-w-lg mx-auto pt-10 px-5">
-                    <img src="/icon_logo.svg" alt="Logotipo Devtree" />
+                    <img src="/icon_logo1.svg" alt="Logotipo Devtree" />
                     <div className="py-10">
                         <Outlet />
                     </div>
