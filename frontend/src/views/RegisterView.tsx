@@ -1,18 +1,25 @@
-import { use } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom"
+import type{ RegisterForm } from "../types";
 import ErrorMessage from "../components/ErrorMessage";
 
 export default function RegisterView() {
-    const {register, watch, handleSubmit, formState: {errors}} = useForm();
 
-    console.log(errors);
-    
-
-    const handleRegister = () => {
-        console.log('desde handleRegister');
-        
+    const initialValues : RegisterForm= {
+        name: '',
+        email: '',
+        handle: '',
+        password: '',
+        password_confirmation: ''
     }
+    const {register, watch, handleSubmit, formState: {errors}} = useForm({defaultValues: initialValues});
+
+    const password = watch('password')
+
+    const handleRegister = (formData: RegisterForm) => {
+        console.log(formData);
+    }
+
     return (
         <>
             <h1 className="text-4xl font-bold">Crear Cuenta</h1>
@@ -41,9 +48,14 @@ export default function RegisterView() {
                         placeholder="Email de Registro"
                         className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
                         {...register('email', {
-                            required: "El email es obligatorio"
+                            required: "El email es obligatorio",
+                            pattern: {
+                                value: /\S+@\S+\.\S+/,
+                                message: "E-mail no válido",
+                            },
                         })}
                     />
+                    {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
                 </div>
                 <div className="grid grid-cols-1 space-y-3">
                     <label htmlFor="handle" className="text-2xl text-slate-500">Handle</label>
@@ -56,6 +68,7 @@ export default function RegisterView() {
                             required: "El handle es obligatorio"
                         })}
                     />
+                    {errors.handle && <ErrorMessage>{errors.handle.message}</ErrorMessage>}
                 </div>
                 <div className="grid grid-cols-1 space-y-3">
                     <label htmlFor="password" className="text-2xl text-slate-500">Password</label>
@@ -65,9 +78,14 @@ export default function RegisterView() {
                         placeholder="Password de Registro"
                         className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
                         {...register('password', {
-                            required: "El password es obligatorio"
+                            required: "El password es obligatorio",
+                            minLength: {
+                                value: 8,
+                                message: "El password debe tener al menos 8 caracteres"
+                            }
                         })}
                     />
+                    {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
                 </div>
 
                 <div className="grid grid-cols-1 space-y-3">
@@ -75,12 +93,14 @@ export default function RegisterView() {
                     <input
                         id="password_confirmation"
                         type="password"
-                        placeholder="Repetir Password"
+                        placeholder="Repetir Password es obligatorio"
                         className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
                     {...register('password_confirmation', {
-                            required: "password_confirmation es obligatorio",
+                        required: "password_confirmation es obligatorio",
+                        validate: (value) => value === password || "Las contraseñas no coinciden"
                         })}
                     />
+                    {errors.password_confirmation && <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>}
                 </div>
 
                 <input
