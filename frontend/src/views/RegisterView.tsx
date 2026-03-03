@@ -18,12 +18,15 @@ export default function RegisterView() {
     const password = watch('password')
 
     const handleRegister = async (formData: RegisterForm) => {
-        try { 
-            const response = await axios.post('http://localhost:3000/auth/register', formData)
-            console.log(response);
+        try {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, formData)
+            console.log(data);
+            console.log("Registro creado correctamente");
             
-        }catch (error) {
-            console.error("Error al registrar usuario:", error);
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                console.log(error.response.data.error)
+            }
         }
     }
 
